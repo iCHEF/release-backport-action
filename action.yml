@@ -63,7 +63,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "`\[${{ github.repository }}\]` `${{ inputs.release-name }}` was released. :tada: Need backport: ${{ steps.create_backport_pr.outputs.pr_url }}"
+                  "text": "[${{ github.repository }}] `${{ inputs.release-name }}` was released. :tada: Need backport: ${{ steps.create_backport_pr.outputs.pr_url }}"
                 }
               }
             ]
