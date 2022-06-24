@@ -1,10 +1,6 @@
 name: 'Backport'
 description: 'Create backport branch of a release and notify developers via Slack.'
 inputs:
-  repo-name:
-    description: 'Repo name for notifying.'
-    required: true
-    default: ''
   github-token:
     description: 'Github token for creating Pull Request'
     required: true
@@ -67,7 +63,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "[${{ inputs.repo-name }}] `${{ inputs.release-name }}` was released. :tada: Need backport: ${{ steps.create_backport_pr.outputs.pr_url }}"
+                  "text": "`\[${{ github.repository }}\]` `${{ inputs.release-name }}` was released. :tada: Need backport: ${{ steps.create_backport_pr.outputs.pr_url }}"
                 }
               }
             ]

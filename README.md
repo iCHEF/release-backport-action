@@ -35,10 +35,6 @@ jobs:
 
 ```yml
 inputs:
-  repo-name:
-    description: 'Repo name for notifying.'
-    required: true
-    default: ''
   github-token:
     description: 'Github token for creating Pull Request'
     required: true
