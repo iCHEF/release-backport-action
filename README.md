@@ -23,9 +23,10 @@ jobs:
     - name: Backport
       uses: iCHEF/release-backport-action@v1
       with:
+        repo-name: ${{ env.GITHUB_REPOSITORY }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         release-name: ${{ env.RELEASE_VERSION }}
-        release-info: ${{ steps.create_github_release.outputs.url }}
+        release-info: ${{ steps.create_github_release.outputs.html_url }}
         slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
         slack-notify-channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
 ```
@@ -34,6 +35,10 @@ jobs:
 
 ```yml
 inputs:
+  repo-name:
+    description: 'Repo name for notifying.'
+    required: true
+    default: ''
   github-token:
     description: 'Github token for creating Pull Request'
     required: true
