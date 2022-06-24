@@ -1,0 +1,68 @@
+name: 'Backport'
+description: 'Create backport branch of a release and notify developers via Slack.'
+inputs:
+  github-token:
+    description: 'Github token for creating Pull Request'
+    required: true
+    default: ''
+  release-name:
+    description: 'Release name for backport branch name. Usually is a version number.'
+    required: true
+    default: ''
+  release-info:
+    description: 'The info of this release. Usually is a GitHub release URL.'
+    required: true
+    default: ''
+  slack-bot-token:
+    description: 'The slack bot token for notifying.'
+    required: true
+    default: ''
+  slack-notify-channel-id:
+    description: 'The target channel id for notifying.'
+    required: true
+    default: ''
+  pr-destination-branch:
+    description: 'The branch which needs backport.'
+    required: false
+    default: 'develop'
+runs:
+  using: 'composite'
+  steps:
+    - name: Build backport branch name
+      id: get_backport_branch
+      run: echo "::set-output name=name::port/${{ inputs.release-name }}"
+    - name: Create backport branch and push to remote origin
+      run: |
+        git checkout -b ${{ steps.get_backport_branch.outputs.name }}
+        git push origin ${{ steps.get_backport_branch.outputs.name }}
+    - name: Create a backport pull request
+      id: create_backport_pr
+      uses: repo-sync/pull-request@v2
+      with:
+        github_token: ${{ inputs.github-token }}
+        source_branch: ${{ steps.get_backport_branch.outputs.name }}
+        destination_branch: ${{ inputs.pr-destination-branch }}
+        pr_title: "Backport/${{ inputs.release-name }}"
+        pr_label: "backport"
+        pr_body: |
+          It's an automated backport PR of release: ${{ inputs.release-url }}
+        pr_allow_empty: true
+    - name: Slack notify need backport
+      id: post_slack
+      uses: slackapi/slack-github-action@v1.19.0
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+      with:
+        channel-id: ${{ inputs.slack-notify-channel-id }}
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "[${{ env.GITHUB_REPOSITORY }}] `${{ inputs.release-name }}` was released. :tada: Need backport: ${{ steps.create_backport_pr.outputs.pr_url }}"
+                }
+              }
+            ]
+          }
