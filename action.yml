@@ -47,7 +47,7 @@ runs:
         pr_title: "Backport/${{ inputs.release-name }}"
         pr_label: "backport"
         pr_body: |
-          It's an automated backport PR of release: ${{ inputs.release-url }}
+          It's an automated backport PR of release: ${{ inputs.release-info }}
         pr_allow_empty: true
     - name: Slack notify need backport
       id: post_slack
