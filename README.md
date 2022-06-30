@@ -1,5 +1,9 @@
 # Release Backport Action
 
+Action to create a backport PR automatically and notify developers via Slack:
+
+![slack notification](https://user-images.githubusercontent.com/5386489/176590743-c0d25899-9bfc-4ad2-9e8a-cd6d656a02b7.png)
+
 ## Usage
 
 ### Example
