@@ -31,7 +31,7 @@ runs:
     - name: Build backport branch name
       id: get_backport_branch
       shell: bash
-      run: echo "::set-output name=name::port/${{ inputs.release-name }}"
+      run: echo "name=port/${{ inputs.release-name }}" >> $GITHUB_OUTPUT
     - name: Create backport branch and push to remote origin
       shell: bash
       run: |
