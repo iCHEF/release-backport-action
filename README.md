@@ -25,14 +25,12 @@ jobs:
         tag: ${{ env.RELEASE_VERSION }}
         publish: true
     - name: Backport
-      uses: iCHEF/release-backport-action@v1
+      uses: iCHEF/release-backport-action@v2
       with:
-        repo-name: ${{ env.GITHUB_REPOSITORY }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
         release-name: ${{ env.RELEASE_VERSION }}
         release-info: ${{ steps.create_github_release.outputs.html_url }}
-        slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-        slack-notify-channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+        slack-webhook: ${{ secrets.FE_PR_NOTIFY_SLACK_WEBHOOK }}
 ```
 
 ### Inputs
@@ -51,14 +49,9 @@ inputs:
     description: 'The info of this release. Usually is a GitHub release URL.'
     required: true
     default: ''
-  slack-bot-token:
-    description: 'The slack bot token for notifying.'
+  slack-webhook:
+    description: 'Slack Workflow Builder webhook for notifying.'
     required: true
-    default: ''
-  slack-notify-channel-id:
-    description: 'The target channel id for notifying.'
-    required: true
-    default: ''
   pr-destination-branch:
     description: 'The branch which needs backport.'
     required: false
