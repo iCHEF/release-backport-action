@@ -13,14 +13,9 @@ inputs:
     description: 'The info of this release. Usually is a GitHub release URL.'
     required: true
     default: ''
-  slack-bot-token:
-    description: 'The slack bot token for notifying.'
+  slack-webhook:
+    description: 'Slack Workflow Builder webhook for notifying.'
     required: true
-    default: ''
-  slack-notify-channel-id:
-    description: 'The target channel id for notifying.'
-    required: true
-    default: ''
   pr-destination-branch:
     description: 'The branch which needs backport.'
     required: false
@@ -49,22 +44,15 @@ runs:
         pr_body: |
           It's an automated backport PR of release: ${{ inputs.release-info }}
         pr_allow_empty: true
-    - name: Slack notify need backport
+    - name: Notify Slack of backport PR
       id: post_slack
-      uses: slackapi/slack-github-action@v1.19.0
+      uses: slackapi/slack-github-action@v1.21.0
       env:
-        SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
       with:
-        channel-id: ${{ inputs.slack-notify-channel-id }}
         payload: |
           {
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "[${{ github.repository }}] `${{ inputs.release-name }}` was released. :tada: Need backport: ${{ steps.create_backport_pr.outputs.pr_url }}"
-                }
-              }
-            ]
+            "repo": "${{ github.repository }}",
+            "version": "Backport ${{ inputs.release-name }}",
+            "pr_url": "${{ steps.create_backport_pr.outputs.pr_url }}"
           }
